@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI聊天助手</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 轮播图样式 */
+        .carousel {
+            position: relative;
+            max-width: 800px;
+            margin: 20px auto;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+
+        .carousel-control {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: white;
+        }
+
+        /* 聊天界面样式 */
+        .chat-section {
+            margin: 40px 0;
+        }
+
+        .chat-container {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chat-messages {
+            height: 200px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .quick-replies {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quick-reply-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input textarea {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .chat-input button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 添加主页面内容 -->
+    <header style="background: #f8f9fa; padding: 20px; text-align: center;">
+        <h1>欢迎来到我的网站</h1>
+        <p>这是一个带有AI助手的示例页面</p>
+    </header>
+
+    <!-- 添加轮播图组件 -->
+    <div class="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item" style="background-image: url('https://picsum.photos/800/400?random=1')"></div>
+            <div class="carousel-item" style="background-image: url('https://picsum.photos/800/400?random=2')"></div>
+            <div class="carousel-item" style="background-image: url('https://picsum.photos/800/400?random=3')"></div>
+            <div class="carousel-item" style="background-image: url('https://picsum.photos/800/400?random=4')"></div>
+        </div>
+        <div class="carousel-controls">
+            <button class="carousel-control" onclick="moveSlide(-1)">❮</button>
+            <button class="carousel-control" onclick="moveSlide(1)">❯</button>
+        </div>
+        <div class="carousel-dots">
+            <span class="dot active" onclick="setSlide(0)"></span>
+            <span class="dot" onclick="setSlide(1)"></span>
+            <span class="dot" onclick="setSlide(2)"></span>
+            <span class="dot" onclick="setSlide(3)"></span>
+        </div>
+    </div>
+
+    <main style="padding: 20px; max-width: 800px; margin: 0 auto;">
+        <!-- 添加个人介绍部分 -->
+        <section class="profile-section" style="display: flex; align-items: center; gap: 20px; margin: 40px 0; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <div class="profile-image" style="flex-shrink: 0;">
+                <img src="https://ui-avatars.com/api/?name=歪歪&size=128&background=random" 
+                     alt="个人头像" 
+                     style="width: 128px; height: 128px; border-radius: 50%; border: 3px solid #007bff;">
+            </div>
+            <div class="profile-info">
+                <h2 style="color: #333; margin-bottom: 10px;">歪歪</h2>
+                <p style="color: #666; margin-bottom: 15px;">程序员 | 打工人</p>
+                <p style="line-height: 1.6; color: #444;">
+                    我是一名热爱编程的程序员，专注于Web开发和人工智能应用。
+                    作为一名打工人，我享受着996的快乐，用代码改变世界。
+                    在工作之余，我也热衷于学习新技术，探索编程的无限可能...
+                </p>
+                <div class="social-links" style="margin-top: 15px;">
+                    <a href="#" style="color: #007bff; margin-right: 15px; text-decoration: none;">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                    <a href="#" style="color: #007bff; margin-right: 15px; text-decoration: none;">
+                        <i class="fab fa-linkedin"></i> LinkedIn
+                    </a>
+                    <a href="#" style="color: #007bff; text-decoration: none;">
+                        <i class="fas fa-envelope"></i> Email
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 添加聊天界面部分 -->
+        <section class="chat-section" style="margin: 40px 0;">
+            <h2>与AI助手对话</h2>
+            <div id="chat-container" class="chat-container">
+                <div class="chat-header">
+                    <h3>AI助手</h3>
+                </div>
+                
+                <div id="chat-messages" class="chat-messages">
+                    <!-- 消息将在这里动态加载 -->
+                </div>
+
+                <div class="quick-replies">
+                    <button class="quick-reply-btn">你好</button>
+                    <button class="quick-reply-btn">我想知道更多</button>
+                    <button class="quick-reply-btn">谢谢</button>
+                </div>
+                
+                <div class="chat-input">
+                    <textarea id="message-input" placeholder="输入消息..."></textarea>
+                    <button id="send-message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>主要内容</h2>
+            <p>这里是网站的主要内容区域。您可以在右下角找到AI助手，随时与其交谈。</p>
+        </section>
+        
+        <section style="margin-top: 20px;">
+            <h2>功能特点</h2>
+            <ul style="list-style: none; padding: 0;">
+                <li style="margin: 10px 0;">✨ 24/7 在线AI助手</li>
+                <li style="margin: 10px 0;">💬 实时对话功能</li>
+                <li style="margin: 10px 0;">🚀 快速响应</li>
+                <li style="margin: 10px 0;">📱 移动端适配</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- 添加专业的页脚 -->
+    <footer style="background: #2c3e50; color: #ecf0f1; padding: 60px 0 20px 0; margin-top: 50px;">
+        <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; padding: 0 20px;">
+            <!-- 关于我们部分 -->
+            <div>
+                <h3 style="color: #3498db; margin-bottom: 20px;">关于我们</h3>
+                <p style="line-height: 1.6; color: #bdc3c7;">
+                    我们是一个充满激情的技术团队，致力于为用户提供最好的Web体验和AI解决方案。
+                </p>
+            </div>
+            
+            <!-- 快速链接 -->
+            <div>
+                <h3 style="color: #3498db; margin-bottom: 20px;">快速链接</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 10px;">
+                        <a href="#" style="color: #bdc3c7; text-decoration: none; transition: color 0.3s;">
+                            ▸ 首页
+                        </a>
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <a href="#" style="color: #bdc3c7; text-decoration: none; transition: color 0.3s;">
+                            ▸ 服务
+                        </a>
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <a href="#" style="color: #bdc3c7; text-decoration: none; transition: color 0.3s;">
+                            ▸ 项目展示
+                        </a>
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        <a href="#" style="color: #bdc3c7; text-decoration: none; transition: color 0.3s;">
+                            ▸ 联系我们
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 联系方式 -->
+            <div>
+                <h3 style="color: #3498db; margin-bottom: 20px;">联系方式</h3>
+                <p style="margin-bottom: 10px; color: #bdc3c7;">
+                    <i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> 地址：中国北京市
+                </p>
+                <p style="margin-bottom: 10px; color: #bdc3c7;">
+                    <i class="fas fa-phone" style="margin-right: 10px;"></i> 电话：(+86) 123-4567-8900
+                </p>
+                <p style="margin-bottom: 10px; color: #bdc3c7;">
+                    <i class="fas fa-envelope" style="margin-right: 10px;"></i> 邮箱：contact@example.com
+                </p>
+            </div>
+            
+            <!-- 社交媒体 -->
+            <div>
+                <h3 style="color: #3498db; margin-bottom: 20px;">关注我们</h3>
+                <div style="display: flex; gap: 15px;">
+                    <a href="#" style="color: #bdc3c7; font-size: 24px; transition: color 0.3s;">
+                        <i class="fab fa-weixin"></i>
+                    </a>
+                    <a href="#" style="color: #bdc3c7; font-size: 24px; transition: color 0.3s;">
+                        <i class="fab fa-weibo"></i>
+                    </a>
+                    <a href="#" style="color: #bdc3c7; font-size: 24px; transition: color 0.3s;">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="#" style="color: #bdc3c7; font-size: 24px; transition: color 0.3s;">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 版权信息 -->
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #34495e;">
+            <p style="color: #bdc3c7;">
+                © 2024 歪歪的个人网站. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        // 轮播图脚本
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(n) {
+            currentSlide = n;
+            const carousel = document.querySelector('.carousel-inner');
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // 更新圆点状态
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentSlide].classList.add('active');
+        }
+
+        function moveSlide(direction) {
+            let newSlide = currentSlide + direction;
+            if (newSlide >= slides.length) newSlide = 0;
+            if (newSlide < 0) newSlide = slides.length - 1;
+            showSlide(newSlide);
+        }
+
+        function setSlide(n) {
+            showSlide(n);
+        }
+
+        // 自动轮播
+        setInterval(() => moveSlide(1), 5000);
+    </script>
+</body>
+</html> 
